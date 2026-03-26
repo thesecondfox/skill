@@ -20,6 +20,7 @@
 - **bio-methylation-analysis-methylation-calling**: 甲基化位点检测
 - **bio-methylation-analysis-dmr-detection**: 差异甲基化区域（DMR）
 - **bio-methylation-analysis-methylkit-analysis**: MethylKit 分析流程
+- **bio-aging-clocks**: 表观遗传衰老时钟分析（biolearn），支持 67+ 模型（Horvath, Hannum, PhenoAge, GrimAge, DunedinPACE 等），覆盖 Illumina 27K/450K/EPIC 平台，可访问 2200+ GEO 数据集，包含血细胞反卷积、疾病风险评分、端粒长度估算
 
 ### 4. Hi-C 染色质互作
 - **bio-hi-c-analysis-hic-data-io**: Hi-C 数据读取
