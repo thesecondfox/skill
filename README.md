@@ -204,13 +204,9 @@ Runnable code examples.
 
 ## Star History
 
-<a href="https://star-history.com/#thesecondfox/skill&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=thesecondfox/skill&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=thesecondfox/skill&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=thesecondfox/skill&type=Date" />
- </picture>
-</a>
+[![Star History Chart](https://api.star-history.com/svg?repos=thesecondfox/skill&type=Date)](https://star-history.com/#thesecondfox/skill&Date)
+
+> If the chart is not visible, the repository may not have enough stars yet. [Click here to view on Star History](https://star-history.com/#thesecondfox/skill&Date) or give this repo a star to get it started!
 
 ## License
 
