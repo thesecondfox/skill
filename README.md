@@ -1,70 +1,223 @@
-# Bioinformatics Skills Collection
+<p align="center">
+  <h1 align="center">Bioinformatics Skills Collection</h1>
+  <p align="center">
+    A curated library of 492 AI-agent skills for computational biology and bioinformatics.
+    <br />
+    <a href="#omics-domains"><strong>Explore Domains</strong></a>
+    &middot;
+    <a href="#quick-start"><strong>Quick Start</strong></a>
+    &middot;
+    <a href="AI_AGENT_GUIDE.md"><strong>AI Agent Guide</strong></a>
+  </p>
+</p>
 
-492 curated skills for computational biology and bioinformatics, organized in a Two-Tier architecture.
+<p align="center">
+  <a href="https://github.com/thesecondfox/skill/stargazers"><img src="https://img.shields.io/github/stars/thesecondfox/skill?style=flat-square&color=yellow" alt="Stars"></a>
+  <a href="https://github.com/thesecondfox/skill/network/members"><img src="https://img.shields.io/github/forks/thesecondfox/skill?style=flat-square" alt="Forks"></a>
+  <a href="https://github.com/thesecondfox/skill/issues"><img src="https://img.shields.io/github/issues/thesecondfox/skill?style=flat-square" alt="Issues"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/thesecondfox/skill?style=flat-square" alt="License"></a>
+  <a href="https://github.com/thesecondfox/skill/commits/main"><img src="https://img.shields.io/github/last-commit/thesecondfox/skill?style=flat-square" alt="Last Commit"></a>
+  <img src="https://img.shields.io/badge/skills-492-blue?style=flat-square" alt="Skills Count">
+  <img src="https://img.shields.io/badge/omics_domains-17-green?style=flat-square" alt="Domains">
+</p>
+
+---
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Architecture](#architecture)
+- [Omics Domains](#omics-domains)
+- [Common Skills](#common-skills)
+- [Quick Start](#quick-start)
+- [Installation](#installation)
+- [For AI Agents](#for-ai-agents)
+- [Contributing](#contributing)
+- [Star History](#star-history)
+- [License](#license)
+
+## Overview
+
+This repository provides **492 curated bioinformatics skills** designed for AI coding agents (Claude Code, Cursor, etc.). Each skill is a structured instruction set that teaches an AI agent how to perform a specific bioinformatics task — from raw data processing to publication-quality visualization.
+
+### Key Features
+
+- **17 omics domains** covering the full spectrum of modern bioinformatics
+- **Pipeline-oriented** README in each domain, organized by analysis lifecycle
+- **Two-Tier architecture** separating cross-domain tools from domain-specific analyses
+- **30+ database connectors** for PubMed, UniProt, KEGG, ClinVar, gnomAD and more
+- **40+ pre-built workflows** for RNA-seq, ATAC-seq, GWAS, metagenomics and more
+- **AI Agent Guide** with routing table and orchestration protocol
 
 ## Architecture
 
 ```
-├── Common_Skills/       (248)  跨领域通用工具
-└── Omics_Domains/       (244)  按组学领域分类，每个子目录含 Pipeline README
+skill/
+├── Common_Skills/          248 cross-domain tools
+│   ├── Database access         (PubMed, UniProt, KEGG, GEO, ...)
+│   ├── Visualization           (Circos, heatmaps, volcano, ...)
+│   ├── Sequence operations     (I/O, format conversion, intervals)
+│   ├── Statistical analysis    (experimental design, multiple testing)
+│   ├── Workflow management     (Snakemake, Nextflow, CWL, WDL)
+│   ├── Scientific writing      (LaTeX, PPTX, Jupyter, Quarto)
+│   └── Core libraries          (scanpy, biopython, pysam, rdkit, ...)
+│
+├── Omics_Domains/          244 domain-specific skills
+│   ├── Genomics/               (39 skills)
+│   ├── Epigenomics/            (26 skills)
+│   ├── Transcriptomics/        (24 skills)
+│   ├── ...                     (14 more domains)
+│   └── Long_Read/              (4 skills)
+│
+├── AI_AGENT_GUIDE.md       Instruction for AI agents
+├── CHANGELOG_20260326.md   Change log
+└── README.md               This file
 ```
 
-## Omics Domains (17 领域)
+## Omics Domains
 
-| 领域 | Skills | 覆盖范围 |
-|------|--------|---------|
-| Genomics | 39 | 变异检测、基因组组装与注释、群体遗传学、结构变异 |
-| Epigenomics | 26 | ChIP-seq、ATAC-seq、DNA 甲基化、Hi-C、衰老时钟 |
-| Transcriptomics | 24 | RNA-seq、差异表达、可变剪接、Ribo-seq、小 RNA |
-| Immunology | 17 | TCR/BCR 分析、流式细胞术、免疫信息学、新抗原预测 |
-| Single_Cell | 16 | 预处理、聚类、注释、轨迹推断、扰动预测（27 模型基准） |
-| Spatial | 15 | 空间转录组、空间蛋白组、空间域检测、反卷积 |
-| Alignment | 14 | BWA/STAR/HISAT2 比对、SAM/BAM 操作、多序列比对 |
-| Functional_Genomics | 14 | CRISPR 筛选、CLIP-seq、Perturb-seq |
-| Metagenomics | 14 | 物种分类、功能注释、耐药基因检测、菌株追踪 |
-| Clinical | 10 | 临床变异解读、液体活检、药物基因组学、肿瘤突变负荷 |
-| Pathway_Analysis | 10 | GO/KEGG/Reactome 富集、GSEA、WikiPathways |
-| Proteomics | 10 | DIA 分析、蛋白定量、翻译后修饰、差异丰度 |
-| Chemoinformatics | 9 | 分子描述符、ADMET 预测、虚拟筛选、相似性搜索 |
-| Machine_Learning | 8 | 组学分类器、生物标志物发现、生存分析、模型验证 |
-| Metabolomics | 8 | XCMS/MS-DIAL 预处理、代谢物注释、脂质组学 |
-| Structural_Biology | 6 | AlphaFold 预测、PDB 操作、分子动力学 |
-| Long_Read | 4 | Nanopore/HiFi 比对、Clair3 变异检测、甲基化检测 |
+| Domain | Skills | Coverage |
+|--------|--------|----------|
+| **Genomics** | 39 | Variant calling, genome assembly & annotation, population genetics, structural variants |
+| **Epigenomics** | 26 | ChIP-seq, ATAC-seq, DNA methylation, Hi-C, aging clocks |
+| **Transcriptomics** | 24 | RNA-seq, differential expression, alternative splicing, Ribo-seq, small RNA |
+| **Immunology** | 17 | TCR/BCR analysis, flow cytometry, immunoinformatics, neoantigen prediction |
+| **Single Cell** | 16 | Preprocessing, clustering, annotation, trajectory, perturbation prediction (27-model benchmark) |
+| **Spatial** | 15 | Spatial transcriptomics, spatial proteomics, domain detection, deconvolution |
+| **Alignment** | 14 | BWA/STAR/HISAT2 alignment, SAM/BAM operations, MSA |
+| **Functional Genomics** | 14 | CRISPR screens, CLIP-seq, Perturb-seq |
+| **Metagenomics** | 14 | Taxonomic classification, functional annotation, AMR detection, strain tracking |
+| **Clinical** | 10 | Clinical variant interpretation, liquid biopsy, pharmacogenomics, TMB |
+| **Pathway Analysis** | 10 | GO/KEGG/Reactome enrichment, GSEA, WikiPathways |
+| **Proteomics** | 10 | DIA analysis, protein quantification, PTM, differential abundance |
+| **Chemoinformatics** | 9 | Molecular descriptors, ADMET prediction, virtual screening |
+| **Machine Learning** | 8 | Omics classifiers, biomarker discovery, survival analysis |
+| **Metabolomics** | 8 | XCMS/MS-DIAL preprocessing, metabolite annotation, lipidomics |
+| **Structural Biology** | 6 | AlphaFold prediction, PDB operations, molecular dynamics |
+| **Long Read** | 4 | Nanopore/HiFi alignment, Clair3 variant calling, methylation detection |
 
-每个领域目录下都有 README.md，按分析 Pipeline 的生命周期串联所有 skill。
+> Each domain directory contains a `README.md` that maps skills to pipeline stages.
 
-## Common Skills (248) 分类概览
+## Common Skills
 
-### 数据库访问
-PubMed, UniProt, Ensembl, KEGG, Reactome, STRING, PDB, ClinVar, gnomAD, COSMIC, DrugBank, ChEMBL, PubChem, GEO, GTEx, GWAS Catalog, DepMap, OpenTargets 等 30+ 数据库
-
-### 序列与基因组操作
-序列读写与格式转换、基因组区间运算（BED/GTF/BigWig）、表达矩阵处理、比较基因组学、限制性酶切分析
-
-### 可视化
-Circos、基因组浏览器、热图、火山图、UpSet 图、网络图、多面板组图、交互式可视化、配色方案
-
-### 实验设计与统计
-样本量计算、功效分析、批次设计、多重检验校正、统计分析、探索性数据分析
-
-### 工作流管理
-Snakemake、Nextflow、CWL、WDL 及 40+ 预构建 Pipeline（RNA-seq、ATAC-seq、GWAS、宏基因组等）
-
-### 科研写作与报告
-科学写作、文献管理、LaTeX/PPTX 海报、Jupyter/Quarto/RMarkdown 报告、图表导出
-
-### 核心库
-scanpy, anndata, biopython, pysam, scikit-bio, rdkit, deepchem, pydeseq2, scvi-tools, scvelo, cobrapy, networkx, matplotlib, seaborn, plotly, scikit-learn, statsmodels, polars, dask
-
-### 专题分析
-表观转录组学（m6A）、生态基因组学、流行病基因组学、基因组工程（CRISPR 设计）、系统生物学（代谢建模）、时间序列基因组学
+| Category | Examples | Count |
+|----------|----------|-------|
+| Database Access | PubMed, UniProt, Ensembl, KEGG, ClinVar, gnomAD, GEO, DrugBank | 30+ |
+| Visualization | Circos, genome browser, heatmaps, volcano, UpSet, network, interactive | 15+ |
+| Sequence Operations | FASTA/FASTQ I/O, format conversion, BED/GTF intervals, expression matrices | 15+ |
+| Workflow Management | Snakemake, Nextflow, CWL, WDL + 40 pre-built pipelines | 40+ |
+| Core Libraries | scanpy, anndata, biopython, pysam, rdkit, scikit-learn, matplotlib | 19 |
+| Scientific Writing | LaTeX posters, PPTX slides, Jupyter/Quarto/RMarkdown reports | 10+ |
+| Experimental Design | Power analysis, sample size, batch design, multiple testing correction | 4 |
+| Specialized Topics | Epitranscriptomics, ecological genomics, CRISPR design, systems biology | 25+ |
 
 ## Quick Start
 
-1. 确定分析类型，进入对应的 Omics_Domains 子目录
-2. 阅读该领域的 README.md，了解完整 Pipeline
-3. 根据当前分析阶段选择对应 skill
+### 1. Find the right skill
 
-## Changelog
+```
+User task: "Analyze my scRNA-seq data"
 
-详见 [CHANGELOG_20260326.md](CHANGELOG_20260326.md)
+Step 1: Identify domain        → Single_Cell
+Step 2: Read pipeline README   → Omics_Domains/Single_Cell/README.md
+Step 3: Pick pipeline stage    → preprocessing → clustering → annotation
+Step 4: Load skill             → bio-single-cell-preprocessing/SKILL.md
+```
+
+### 2. Skill file structure
+
+Each skill contains at minimum a `SKILL.md`:
+
+```
+bio-single-cell-clustering/
+└── SKILL.md          # Capabilities, workflow, parameters, examples
+
+# Some skills include additional resources:
+bio-aging-clocks/
+├── SKILL.md          # Core documentation
+├── reference.md      # API reference
+└── examples/         # Runnable scripts
+```
+
+## Installation
+
+Clone the repository:
+
+```bash
+git clone git@github.com:thesecondfox/skill.git
+```
+
+### For Claude Code
+
+```bash
+# Copy to Claude skills directory
+cp -r skill/ ~/.claude/skills/
+```
+
+### For Cursor
+
+```bash
+# Copy to Cursor rules directory
+cp -r skill/ ~/.cursor/rules/
+```
+
+## For AI Agents
+
+See [AI_AGENT_GUIDE.md](AI_AGENT_GUIDE.md) for:
+- Skill resolution protocol and domain routing table
+- Loading priority rules
+- Multi-skill orchestration patterns
+- Common Skills category index
+
+## Contributing
+
+Contributions are welcome! To add a new skill:
+
+1. Fork this repository
+2. Create a new directory under the appropriate location:
+   - `Common_Skills/` for cross-domain tools
+   - `Omics_Domains/<domain>/` for domain-specific skills
+3. Add a `SKILL.md` following the existing format
+4. Update the domain `README.md` to include your skill in the pipeline
+5. Submit a Pull Request
+
+### Skill format
+
+```markdown
+# Skill Name
+
+## Overview
+Brief description of what this skill does.
+
+## When to Use This Skill
+Conditions that trigger this skill.
+
+## Workflow
+Step-by-step analysis procedure.
+
+## Parameters
+Key parameters and their defaults.
+
+## Examples
+Runnable code examples.
+```
+
+## Star History
+
+<a href="https://star-history.com/#thesecondfox/skill&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=thesecondfox/skill&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=thesecondfox/skill&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=thesecondfox/skill&type=Date" />
+ </picture>
+</a>
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+<p align="center">
+  Made with Claude Code
+</p>
