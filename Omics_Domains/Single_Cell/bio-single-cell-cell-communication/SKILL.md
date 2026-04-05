@@ -1,8 +1,9 @@
 ---
 name: bio-single-cell-cell-communication
-description: Infer cell-cell communication networks from scRNA-seq data using CellChat, NicheNet, and LIANA for ligand-receptor interaction analysis. Use when inferring ligand-receptor interactions between cell types.
+description: Infer cell-cell communication networks from scRNA-seq data using CellChat, NicheNet, and LIANA for ligand-receptor interaction analysis. Use when inferring ligand-receptor interactions between cell types. Supports local-first mode via local-reference-registry.
 tool_type: mixed
 primary_tool: CellChat
+depends_on: local-reference-registry
 ---
 
 ## Version Compatibility
@@ -17,6 +18,37 @@ If code throws ImportError, AttributeError, or TypeError, introspect the install
 package and adapt the example to match the actual API rather than retrying.
 
 # Cell-Cell Communication Analysis
+
+## Local-First Mode (PRIORITY)
+
+**Before running CellChat, check for local ligand-receptor database:**
+
+```r
+config_path <- path.expand("~/.bioref_config.yaml")
+
+if (file.exists(config_path)) {
+    library(yaml)
+    config <- read_yaml(config_path)
+    ref_root <- config$ref_root
+
+    # Load local CellChat database if available
+    cellchat_db_path <- file.path(ref_root, config$cellchat_db$human)  # or $mouse
+    if (file.exists(cellchat_db_path)) {
+        CellChatDB <- readRDS(cellchat_db_path)
+        message("Using local CellChat database: ", cellchat_db_path)
+    } else {
+        CellChatDB <- CellChatDB.human  # fallback to built-in
+        message("Local CellChat DB not found, using built-in database")
+    }
+} else {
+    CellChatDB <- CellChatDB.human  # or CellChatDB.mouse
+    message("No local reference config found, using built-in CellChat database")
+}
+
+cellchat@DB <- CellChatDB
+```
+
+> **Note:** CellChat has built-in databases that work offline. Local mode is mainly useful when you have custom or updated ligand-receptor databases stored as RDS files.
 
 **"Infer cell-cell communication from my scRNA-seq data"** → Predict ligand-receptor interactions between cell types and visualize intercellular signaling networks.
 - R: `CellChat::createCellChat()` → `computeCommunProb()` → `netAnalysis()`

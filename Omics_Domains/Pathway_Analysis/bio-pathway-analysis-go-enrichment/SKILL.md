@@ -1,8 +1,9 @@
 ---
 name: bio-pathway-go-enrichment
-description: Gene Ontology over-representation analysis using clusterProfiler enrichGO. Use when identifying biological functions enriched in a gene list from differential expression or other analyses. Supports all three ontologies (BP, MF, CC), multiple ID types, and customizable statistical thresholds.
+description: Gene Ontology over-representation analysis using clusterProfiler enrichGO. Use when identifying biological functions enriched in a gene list from differential expression or other analyses. Supports all three ontologies (BP, MF, CC), multiple ID types, and customizable statistical thresholds. Supports local-first mode via local-reference-registry.
 tool_type: r
 primary_tool: clusterProfiler
+depends_on: local-reference-registry
 ---
 
 ## Version Compatibility
@@ -17,7 +18,67 @@ package and adapt the example to match the actual API rather than retrying.
 
 # GO Over-Representation Analysis
 
-## Core Pattern
+## Local-First Mode (PRIORITY)
+
+**Before running any GO enrichment, check for local reference data:**
+
+```r
+config_path <- path.expand("~/.bioref_config.yaml")
+
+if (file.exists(config_path)) {
+    # LOCAL MODE: Use pre-downloaded GMT files (no network needed)
+    library(clusterProfiler)
+    library(yaml)
+
+    config <- read_yaml(config_path)
+    ref_root <- config$ref_root
+
+    # Load local GO gene sets
+    # For GO BP:
+    gmt_path <- file.path(ref_root, config$gmt_files$human$go_bp)  # or $mouse$go_bp
+    go_terms <- read.gmt(gmt_path)
+
+    ego <- enricher(
+        gene = gene_list,
+        TERM2GENE = go_terms,
+        pAdjustMethod = "BH",
+        pvalueCutoff = 0.05,
+        qvalueCutoff = 0.2
+    )
+
+    # For GO MF:
+    gmt_mf <- file.path(ref_root, config$gmt_files$human$go_mf)
+    go_mf_terms <- read.gmt(gmt_mf)
+    ego_mf <- enricher(gene = gene_list, TERM2GENE = go_mf_terms)
+
+    # For GO CC:
+    gmt_cc <- file.path(ref_root, config$gmt_files$human$go_cc)
+    go_cc_terms <- read.gmt(gmt_cc)
+    ego_cc <- enricher(gene = gene_list, TERM2GENE = go_cc_terms)
+
+} else {
+    # ONLINE MODE: Fallback to enrichGO (requires network + OrgDb)
+    message("No local reference config (~/.bioref_config.yaml) found.")
+    message("Using online mode. If network is unavailable, run local-reference-registry first.")
+
+    library(clusterProfiler)
+    library(org.Hs.eg.db)
+
+    ego <- enrichGO(
+        gene = gene_list,
+        OrgDb = org.Hs.eg.db,
+        keyType = "ENTREZID",
+        ont = "BP",
+        pAdjustMethod = "BH",
+        pvalueCutoff = 0.05,
+        qvalueCutoff = 0.2
+    )
+}
+```
+
+> **Note:** Local mode uses `enricher()` + `TERM2GENE` instead of `enrichGO()` + `OrgDb`. Gene IDs in local GMT files are typically gene symbols, so set input genes as symbols accordingly.
+
+## Online Mode (Original Pattern)
 
 **Goal:** Identify enriched Gene Ontology terms in a gene list from differential expression or similar analyses.
 

@@ -1,8 +1,9 @@
 ---
 name: bio-pathway-kegg-pathways
-description: KEGG pathway and module enrichment analysis using clusterProfiler enrichKEGG and enrichMKEGG. Use when identifying metabolic and signaling pathways over-represented in a gene list. Supports 4000+ organisms via KEGG online database.
+description: KEGG pathway and module enrichment analysis using clusterProfiler enrichKEGG and enrichMKEGG. Use when identifying metabolic and signaling pathways over-represented in a gene list. Supports 4000+ organisms via KEGG online database. Supports local-first mode via local-reference-registry.
 tool_type: r
 primary_tool: clusterProfiler
+depends_on: local-reference-registry
 ---
 
 ## Version Compatibility
@@ -16,6 +17,51 @@ If code throws ImportError, AttributeError, or TypeError, introspect the install
 package and adapt the example to match the actual API rather than retrying.
 
 # KEGG Pathway Enrichment
+
+## Local-First Mode (PRIORITY)
+
+**Before running any KEGG enrichment, check for local reference data:**
+
+```r
+config_path <- path.expand("~/.bioref_config.yaml")
+
+if (file.exists(config_path)) {
+    # LOCAL MODE: Use pre-downloaded KEGG GMT files (no network needed)
+    library(clusterProfiler)
+    library(yaml)
+
+    config <- read_yaml(config_path)
+    ref_root <- config$ref_root
+
+    # Load local KEGG gene sets
+    gmt_kegg <- file.path(ref_root, config$gmt_files$human$kegg)  # or $mouse$kegg
+    kegg_terms <- read.gmt(gmt_kegg)
+
+    # ORA with local KEGG (uses enricher instead of enrichKEGG)
+    kk <- enricher(
+        gene = gene_list,            # Gene symbols (matching GMT format)
+        TERM2GENE = kegg_terms,
+        pAdjustMethod = "BH",
+        pvalueCutoff = 0.05
+    )
+
+    # GSEA with local KEGG
+    gsea_kegg <- GSEA(
+        geneList = ranked_gene_list,
+        TERM2GENE = kegg_terms,
+        pvalueCutoff = 0.05
+    )
+
+} else {
+    # ONLINE MODE: Fallback to enrichKEGG (requires network)
+    message("No local reference config (~/.bioref_config.yaml) found.")
+    message("Using online mode. If network is unavailable, run local-reference-registry first.")
+}
+```
+
+> **Note:** Local mode uses `enricher()` / `GSEA()` + `TERM2GENE` instead of `enrichKEGG()` / `gseKEGG()`. This eliminates network dependency. Gene IDs in GMT files are typically symbols.
+
+## Online Mode (Original Pattern)
 
 ## Core Pattern
 

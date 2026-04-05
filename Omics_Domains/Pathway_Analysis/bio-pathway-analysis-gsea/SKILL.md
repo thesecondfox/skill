@@ -1,8 +1,9 @@
 ---
 name: bio-pathway-gsea
-description: Gene Set Enrichment Analysis using clusterProfiler gseGO and gseKEGG. Use when analyzing ranked gene lists to find coordinated expression changes in gene sets without arbitrary significance cutoffs. Detects subtle but coordinated expression changes.
+description: Gene Set Enrichment Analysis using clusterProfiler gseGO and gseKEGG. Use when analyzing ranked gene lists to find coordinated expression changes in gene sets without arbitrary significance cutoffs. Detects subtle but coordinated expression changes. Supports local-first mode via local-reference-registry.
 tool_type: r
 primary_tool: clusterProfiler
+depends_on: local-reference-registry
 ---
 
 ## Version Compatibility
@@ -16,6 +17,50 @@ If code throws ImportError, AttributeError, or TypeError, introspect the install
 package and adapt the example to match the actual API rather than retrying.
 
 # Gene Set Enrichment Analysis (GSEA)
+
+## Local-First Mode (PRIORITY)
+
+**Before running any GSEA, check for local reference data:**
+
+```r
+config_path <- path.expand("~/.bioref_config.yaml")
+
+if (file.exists(config_path)) {
+    # LOCAL MODE: Use pre-downloaded GMT files (no network needed)
+    library(clusterProfiler)
+    library(yaml)
+
+    config <- read_yaml(config_path)
+    ref_root <- config$ref_root
+
+    # --- GSEA with local Hallmark gene sets ---
+    gmt_path <- file.path(ref_root, config$gmt_files$human$hallmark)
+    gene_sets <- read.gmt(gmt_path)
+
+    gsea_result <- GSEA(
+        geneList = ranked_gene_list,   # Named, sorted, decreasing
+        TERM2GENE = gene_sets,
+        pvalueCutoff = 0.05
+    )
+
+    # --- GSEA with local GO BP ---
+    gmt_go <- file.path(ref_root, config$gmt_files$human$go_bp)
+    go_terms <- read.gmt(gmt_go)
+    gsea_go <- GSEA(geneList = ranked_gene_list, TERM2GENE = go_terms)
+
+    # --- GSEA with local KEGG ---
+    gmt_kegg <- file.path(ref_root, config$gmt_files$human$kegg)
+    kegg_terms <- read.gmt(gmt_kegg)
+    gsea_kegg <- GSEA(geneList = ranked_gene_list, TERM2GENE = kegg_terms)
+
+} else {
+    # ONLINE MODE: Fallback to gseGO/gseKEGG (requires network + OrgDb)
+    message("No local reference config (~/.bioref_config.yaml) found.")
+    message("Using online mode. If network is unavailable, run local-reference-registry first.")
+}
+```
+
+> **Note:** Local mode uses `GSEA()` + `TERM2GENE` instead of `gseGO()` / `gseKEGG()`. Gene IDs in GMT files are typically gene symbols — ensure your ranked list uses matching ID types.
 
 ## Core Concept
 
